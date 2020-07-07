@@ -1,0 +1,122 @@
+<resources>
+
+    <string-array name="sex">
+        <item> </item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="size">
+        <item> </item>
+        <item>Exhibition</item>
+        <item>King Size</item>
+        <item>Under Sized</item>
+        <item>Good Size</item>
+        <item>Local Exhibition</item>
+        <item>Normal</item>
+    </string-array>
+
+    <string-array name="crested">
+        <item> </item>
+        <item>Single Crust</item>
+        <item>Double Crust</item>
+        <item>Triple Crust</item>
+        <item>Tufted</item>
+        <item>Tufted Back Crusted</item>
+        <item>Back Frill</item>
+        <item>Disturbed Single</item>
+        <item>Disturbed Double</item>
+        <item>Slight Disturbance</item>
+        <item>Crust Bred</item>
+    </string-array>
+
+    <string-array name="mutation">
+        <item>Normal</item>
+        <item>Spangle</item>
+        <item>Dominant pied</item>
+        <item>Recessive pied</item>
+        <item>Clear Flight pied</item>
+        <item>English Fallow</item>
+        <item>German fallow</item>
+        <item>Ino</item>
+        <item>TCB</item>
+        <item>Cinammon</item>
+        <item>Opaline</item>
+        <item>Clearwing</item>
+        <item>Greywing</item>
+        <item>Dilute</item>
+        <item>Yellowface_Type_I</item>
+        <item>Yellowface Type II</item>
+        <item>Goldenface</item>
+        <item>Anthracite</item>
+        <item>Blackwings</item>
+        <item>Crested</item>
+        <item>Hogo</item>
+        <item>ECB</item>
+    </string-array>
+
+    <string name="app_name">The Budgie Book</string>
+    <string name="hello">Hello</string>
+    <string name="sign_into_your_account">Sign into your account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_register_now">Don\'t have an account? <u>Register Now</u></string>
+    <string name="create_account">Create Account</string>
+    <string name="username">Username</string>
+    <string name="or_register_using_social_media">Or Register using social media</string>
+    <string name="or_login_using_social_media">Or Login using social media</string>
+    <string name="already_have_an_account_login">Already have an account? <u>Login</u></string>
+    <string name="register_now">Register Now</string>
+    <string name="logout">Logout</string>
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="search">Search</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="loading">Loading...</string>
+    <string name="birds">Birds</string>
+    <string name="my_profile">My Profile</string>
+    <string name="about_us">About Us</string>
+    <string name="add_new_bird">Add New Bird</string>
+    <string name="ring_number">Ring number</string>
+    <string name="sex">Sex</string>
+    <string name="size">Size</string>
+    <string name="hatch_date">Hatch Date</string>
+    <string name="arrival_date">Arrival Date</string>
+    <string name="color">Color</string>
+    <string name="approx_age">Approx Age</string>
+    <string name="crested">Crested</string>
+    <string name="mother">Mother</string>
+    <string name="father">Father</string>
+    <string name="status">Status</string>
+    <string name="cage_number">Cage Number</string>
+    <string name="ring_owner_name">Ring Owner Name</string>
+    <string name="purchased_price">Purchased Price</string>
+    <string name="taken_from">Taken From</string>
+    <string name="taken_date">Taken Date</string>
+    <string name="seller_number">Seller Number</string>
+    <string name="seller_location">Seller Location</string>
+    <string name="selling_price">Selling Price</string>
+    <string name="given_to">Given To</string>
+    <string name="given_date">Given Date</string>
+    <string name="buyer_number">Buyer Number</string>
+    <string name="buyer_location">Buyer Location</string>
+    <string name="with_partnership">With Partnership</string>
+    <string name="mutation">Mutation</string>
+    <string name="bird_details">Bird Details</string>
+    <string name="country">Country</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="search_hint">Search app</string>
+    <string name="search_by_ring_num">Search by Ring Number</string>
+</resources>

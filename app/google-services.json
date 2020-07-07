@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "263689875115",
+    "firebase_url": "https://loginsignup-632a1.firebaseio.com",
+    "project_id": "loginsignup-632a1",
+    "storage_bucket": "loginsignup-632a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263689875115:android:c7102c3fa22b301659d1ee",
+        "android_client_info": {
+          "package_name": "com.koders.budgie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263689875115-4aq83pvfr8hfdscmhcid6cevo8vqim9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koders.budgie",
+            "certificate_hash": "cf8aed4350af7c43b44e66f522642923191a2ab3"
+          }
+        },
+        {
+          "client_id": "263689875115-6lthl4ljc6fih1epim4qjm3l5rkkebel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRzh3YoBGnugfLiLqbkKmkOfVwNG8XwhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263689875115-6lthl4ljc6fih1epim4qjm3l5rkkebel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
