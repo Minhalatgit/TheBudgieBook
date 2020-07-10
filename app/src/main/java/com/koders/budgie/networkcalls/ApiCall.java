@@ -17,6 +17,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiCall {
@@ -70,10 +71,11 @@ public interface ApiCall {
                            @Part("With_partnership") RequestBody withPartnership,
                            @Part("Mutation") RequestBody mutation);
 
-//    @GET("/birds/birds-info/")
-//    Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization);
-    @GET("/birds/pagination/")
-    Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization, @Query("page") int page);
+
+    //  @GET("/birds/pagination/")
+//  Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization, @Query("page") int page);
+    @GET("/birds/pagination/{start}/{end}")
+    Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization, @Path("start") int start, @Path("end") int end);
 
     @GET("/birds/filter")
     Call<BirdModel> getBird(@Query("ring_no") String ringNum);

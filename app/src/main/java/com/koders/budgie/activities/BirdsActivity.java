@@ -1,21 +1,18 @@
 package com.koders.budgie.activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +42,7 @@ public class BirdsActivity extends AppCompatActivity {
     private RecyclerView birdsRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
+    private TextView noBirds;
     ApiCall apiCall;
     List<BirdInfo> birdInfoList = new ArrayList<>();
     BirdListAdapter birdListAdapter;
@@ -53,11 +51,11 @@ public class BirdsActivity extends AppCompatActivity {
     DatabaseHandler databaseHandler;
     BirdListAdapter.OnBirdClickListener listener;
 
-    private static final int PAGE_START = 1;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int TOTAL_PAGES = 2;
-    private int currentPage = PAGE_START;
+    private static final int PAGE_START = 0;
+    private int start = PAGE_START;
+    private int end = start + 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,8 @@ public class BirdsActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 if (Utility.isNetworkConnected()) {
-                    currentPage = PAGE_START;
+                    start = PAGE_START;
+                    end = start + 10;
                     isLastPage = false;
                     isLoading = false;
                     birdListAdapter.clear();
@@ -94,12 +93,12 @@ public class BirdsActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        currentPage = PAGE_START;
-        isLastPage = false;
-        isLoading = false;
-        birdListAdapter.clear();
-        birdListAdapter.notifyDataSetChanged();
-        getAllBirdsInfo();
+//        start = PAGE_START;
+//        isLastPage = false;
+//        isLoading = false;
+//        birdListAdapter.clear();
+//        birdListAdapter.notifyDataSetChanged();
+//        getAllBirdsInfo();
         Log.d("OnRestart", "Done");
     }
 
@@ -130,6 +129,7 @@ public class BirdsActivity extends AppCompatActivity {
         apiCall = RetrofitClient.getRetrofit().create(ApiCall.class);
         layoutManager = new LinearLayoutManager(this);
         birdsRecyclerView.setLayoutManager(layoutManager);
+        noBirds = findViewById(R.id.noBirds);
 
         birdListAdapter = new BirdListAdapter(BirdsActivity.this, birdInfoList, listener);
         birdsRecyclerView.setAdapter(birdListAdapter);
@@ -137,19 +137,15 @@ public class BirdsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         birdsRecyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
-                //page is scrolled to end now load new items
-                isLoading = true;
-                currentPage += 1;
-                getBirdsInfoPaginated();
-            }
+                start = end + 1;
+                end = start + 9;
 
-            @Override
-            public int getTotalPageCount() {
-                return TOTAL_PAGES;
+                getBirdsInfoPaginated();
             }
 
             @Override
@@ -166,25 +162,26 @@ public class BirdsActivity extends AppCompatActivity {
 
     private void getAllBirdsInfo() {
         loadingDialog.showLoading();
-        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), currentPage).enqueue(new Callback<BirdResponse>() {
+        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
             @Override
             public void onResponse(Call<BirdResponse> call, Response<BirdResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
 
-                        loadingDialog.dismiss();
-
-                        int count = response.body().getTotalBirds();
-                        if (count % 10 == 0) {
-                            TOTAL_PAGES = count / 10;
+                        if (response.body().isStatus()) {
+                            noBirds.setVisibility(View.GONE);
+                            loadingDialog.dismiss();
+                            birdListAdapter.addAll(response.body().getBirdInfoList());
+                            birdListAdapter.addLoadingFooter();
                         } else {
-                            TOTAL_PAGES = (count / 10) + 1;
+                            noBirds.setVisibility(View.VISIBLE);
+                            isLastPage = true;
+                            loadingDialog.dismiss();
+                            Toast.makeText(BirdsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                        birdListAdapter.addAll(response.body().getBirdInfoList());
-                        if (currentPage < TOTAL_PAGES) birdListAdapter.addLoadingFooter();
-                        else isLastPage = true;
                     }
                 } else {
+                    isLastPage = true;
                     loadingDialog.dismiss();
                     Log.d("Response", response.message());
                 }
@@ -192,6 +189,7 @@ public class BirdsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BirdResponse> call, Throwable t) {
+                isLastPage = true;
                 loadingDialog.dismiss();
                 Log.d("Response", t.getMessage());
             }
@@ -199,30 +197,44 @@ public class BirdsActivity extends AppCompatActivity {
     }
 
     private void getBirdsInfoPaginated() {
-        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), currentPage).enqueue(new Callback<BirdResponse>() {
+        isLoading = true;
+        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
             @Override
             public void onResponse(Call<BirdResponse> call, Response<BirdResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        birdListAdapter.removeLoadingFooter();
-                        isLoading = false;
 
-                        birdListAdapter.addAll(response.body().getBirdInfoList());
-                        if (currentPage < TOTAL_PAGES) birdListAdapter.addLoadingFooter();
-                        else isLastPage = true;
+                        if (response.body().isStatus()) {
+                            isLoading = false;
+                            birdListAdapter.removeLoadingFooter();
+                            noBirds.setVisibility(View.GONE);
+                            birdListAdapter.addAll(response.body().getBirdInfoList());
+                            //birdListAdapter.addLoadingFooter();
+                        } else {
+                            //birdListAdapter.removeLoadingFooter();
+                            isLoading = false;
+                            isLastPage = true;
+                            Toast toast = Toast.makeText(BirdsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
                     }
                 } else {
-                    Log.d("Response", response.message());
                     birdListAdapter.removeLoadingFooter();
                     isLoading = false;
+                    isLastPage = true;
+                    Log.d("Response", response.message());
+                    Toast.makeText(BirdsActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<BirdResponse> call, Throwable t) {
-                Log.d("Response", t.getMessage());
                 birdListAdapter.removeLoadingFooter();
                 isLoading = false;
+                isLastPage = true;
+                Log.d("Response", t.getMessage());
+                Toast.makeText(BirdsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -239,6 +251,9 @@ public class BirdsActivity extends AppCompatActivity {
         switch (id) {
             case R.id.add:
                 startActivity(new Intent(BirdsActivity.this, AddBirdActivity.class));
+                return true;
+            case android.R.id.home:
+                onBackPressed(); //OR finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

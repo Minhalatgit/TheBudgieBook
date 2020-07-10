@@ -9,7 +9,7 @@ public class BirdResponse {
     @SerializedName("status")
     private boolean status;
 
-//    @SerializedName("total_birds")
+    //    @SerializedName("total_birds")
     @SerializedName("count")
     private int totalBirds;
 
@@ -20,8 +20,11 @@ public class BirdResponse {
     private String previous;
 
     //    @SerializedName("birds")
-    @SerializedName("results")
+    @SerializedName("result")
     private List<BirdInfo> birdInfoList;
+
+    @SerializedName("message")
+    private String message;
 
     public BirdResponse(boolean status, List<BirdInfo> birdInfoList, int totalBirds) {
         this.status = status;
@@ -55,5 +58,9 @@ public class BirdResponse {
 
     public String getPrevious() {
         return previous;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
