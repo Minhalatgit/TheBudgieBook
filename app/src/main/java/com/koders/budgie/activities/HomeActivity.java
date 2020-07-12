@@ -153,7 +153,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 //open my profile screen
                 break;
             case R.id.nav_about:
-                //open about us screen
+                startActivity(new Intent(HomeActivity.this, AboutUsActivity.class));
                 break;
             case R.id.logout:
                 if (Utility.isNetworkConnected()) {

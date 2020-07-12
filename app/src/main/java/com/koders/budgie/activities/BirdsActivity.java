@@ -51,7 +51,7 @@ public class BirdsActivity extends AppCompatActivity {
     DatabaseHandler databaseHandler;
     BirdListAdapter.OnBirdClickListener listener;
 
-    private boolean isLoading = false;
+    private boolean isLoading = true;
     private boolean isLastPage = false;
     private static final int PAGE_START = 0;
     private int start = PAGE_START;
@@ -76,7 +76,7 @@ public class BirdsActivity extends AppCompatActivity {
                     start = PAGE_START;
                     end = start + 10;
                     isLastPage = false;
-                    isLoading = false;
+                    isLoading = true;
                     birdListAdapter.clear();
                     birdListAdapter.notifyDataSetChanged();
                     getAllBirdsInfo();
@@ -93,12 +93,13 @@ public class BirdsActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-//        start = PAGE_START;
-//        isLastPage = false;
-//        isLoading = false;
-//        birdListAdapter.clear();
-//        birdListAdapter.notifyDataSetChanged();
-//        getAllBirdsInfo();
+        start = PAGE_START;
+        end = start + 10;
+        isLastPage = false;
+        isLoading = true;
+        birdListAdapter.clear();
+        birdListAdapter.notifyDataSetChanged();
+        getAllBirdsInfo();
         Log.d("OnRestart", "Done");
     }
 
@@ -145,6 +146,8 @@ public class BirdsActivity extends AppCompatActivity {
                 start = end + 1;
                 end = start + 9;
 
+                birdListAdapter.addLoadingFooter();
+
                 getBirdsInfoPaginated();
             }
 
@@ -172,7 +175,8 @@ public class BirdsActivity extends AppCompatActivity {
                             noBirds.setVisibility(View.GONE);
                             loadingDialog.dismiss();
                             birdListAdapter.addAll(response.body().getBirdInfoList());
-                            birdListAdapter.addLoadingFooter();
+                            isLoading = false;
+//                            birdListAdapter.addLoadingFooter();
                         } else {
                             noBirds.setVisibility(View.VISIBLE);
                             isLastPage = true;
@@ -211,12 +215,12 @@ public class BirdsActivity extends AppCompatActivity {
                             birdListAdapter.addAll(response.body().getBirdInfoList());
                             //birdListAdapter.addLoadingFooter();
                         } else {
-                            //birdListAdapter.removeLoadingFooter();
-                            isLoading = false;
+                            birdListAdapter.removeLoadingFooter();
+                            //isLoading = false;
                             isLastPage = true;
-                            Toast toast = Toast.makeText(BirdsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+//                            Toast toast = Toast.makeText(BirdsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT);
+//                            toast.setGravity(Gravity.CENTER, 0, 0);
+//                            toast.show();
                         }
                     }
                 } else {
