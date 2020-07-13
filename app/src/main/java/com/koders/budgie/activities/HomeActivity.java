@@ -1,25 +1,29 @@
 package com.koders.budgie.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.koders.budgie.R;
 import com.koders.budgie.adapters.NavigationAdapter;
-import com.koders.budgie.database.DatabaseHandler;
 import com.koders.budgie.networkcalls.ApiCall;
 import com.koders.budgie.networkcalls.RetrofitClient;
 import com.koders.budgie.model.Data;
@@ -39,13 +43,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private ImageView hamburger;
+    //    private ImageView hamburger;
     private RecyclerView homeNavigationRecyclerView;
     ApiCall apiCall;
     LoadingDialog loadingDialog;
     List<Navigation> navigationList;
     RecyclerView.LayoutManager layoutManager;
     NavigationAdapter adapter;
+    Toolbar toolbar;
+    TextView toolbarText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +59,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         init();
 
-        hamburger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
+//        hamburger.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                drawerLayout.openDrawer(GravityCompat.START);
+//            }
+//        });
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
@@ -66,11 +72,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void init() {
         drawerLayout = findViewById(R.id.drawer);
-        hamburger = findViewById(R.id.hamburger);
+        //hamburger = findViewById(R.id.hamburger);
         navigationView = findViewById(R.id.nav_view);
         homeNavigationRecyclerView = findViewById(R.id.homeNavigationRecyclerView);
+        toolbar = findViewById(R.id.toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbarText);
         loadingDialog = new LoadingDialog(HomeActivity.this);
         navigationList = new ArrayList<>();
+
+        toolbarText.setText("Home");
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(HomeActivity.this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         populateHomeNavigation();
         layoutManager = new GridLayoutManager(this, 2);
@@ -146,7 +163,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_home:
-                //to open home activity
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_profile:
@@ -154,6 +170,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_about:
                 startActivity(new Intent(HomeActivity.this, AboutUsActivity.class));
+                break;
+            case R.id.rate:
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                }
+                break;
+            case R.id.share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "The Budgie Book");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Making birds' sale purchase quite easier for you!\nKindly have a look.");
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
                 break;
             case R.id.logout:
                 if (Utility.isNetworkConnected()) {

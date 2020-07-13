@@ -42,6 +42,7 @@ public class BirdsActivity extends AppCompatActivity {
     private RecyclerView birdsRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
+    private TextView toolbarText;
     private TextView noBirds;
     ApiCall apiCall;
     List<BirdInfo> birdInfoList = new ArrayList<>();
@@ -131,10 +132,12 @@ public class BirdsActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         birdsRecyclerView.setLayoutManager(layoutManager);
         noBirds = findViewById(R.id.noBirds);
+        toolbarText = toolbar.findViewById(R.id.toolbarText);
 
         birdListAdapter = new BirdListAdapter(BirdsActivity.this, birdInfoList, listener);
         birdsRecyclerView.setAdapter(birdListAdapter);
 
+        toolbarText.setText("Birds");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
