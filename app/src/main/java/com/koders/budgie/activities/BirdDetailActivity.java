@@ -25,7 +25,7 @@ import com.koders.budgie.networkcalls.RetrofitClient;
 import com.koders.budgie.model.BirdModel;
 import com.koders.budgie.utils.BirdInfoDialog;
 import com.koders.budgie.utils.LoadingDialog;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 import com.koders.budgie.utils.Utility;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -562,7 +562,7 @@ public class BirdDetailActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //delete api call
                         loadingDialog.showLoading();
-                        apiCall.deleteBird("Token " + SharePreferencesHandler.getToken(), ringNum).enqueue(new Callback<Data>() {
+                        apiCall.deleteBird("Token " + SharedPreferencesHandler.getToken(), ringNum).enqueue(new Callback<Data>() {
                             @Override
                             public void onResponse(Call<Data> call, Response<Data> response) {
                                 if (response.isSuccessful()) {

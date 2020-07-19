@@ -8,8 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -43,7 +41,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.textfield.TextInputLayout;
 import com.koders.budgie.R;
 import com.koders.budgie.config.Constants;
@@ -53,7 +50,7 @@ import com.koders.budgie.model.BirdInfo;
 import com.koders.budgie.model.BirdModel;
 import com.koders.budgie.model.Data;
 import com.koders.budgie.utils.LoadingDialog;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 import com.koders.budgie.utils.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -586,7 +583,7 @@ public class AddBirdActivity extends AppCompatActivity {
                                 RequestBody buyerLocation, RequestBody withPartnership, RequestBody mutation) {
         loadingDialog.showLoading();
         //update api call
-        apiCall.updateBirdInfo("Token " + SharePreferencesHandler.getToken(), ring_no, image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
+        apiCall.updateBirdInfo("Token " + SharedPreferencesHandler.getToken(), ring_no, image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
                 ringOwnerName, purchasedPrice, takenFrom, takenDate, sellerNumber, sellerLocation, sellingPrice, givenTo, givenDate,
                 buyerNumber, buyerLocation, withPartnership, mutation).enqueue(new Callback<BirdModel>() {
             @Override
@@ -863,7 +860,7 @@ public class AddBirdActivity extends AppCompatActivity {
                                 RequestBody sellingPrice, RequestBody givenTo, RequestBody givenDate, RequestBody buyerNumber,
                                 RequestBody buyerLocation, RequestBody withPartnership, RequestBody mutation) {
         loadingDialog.showLoading();
-        apiCall.addBirdInfo("Token " + SharePreferencesHandler.getToken(), image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
+        apiCall.addBirdInfo("Token " + SharedPreferencesHandler.getToken(), image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
                 ringOwnerName, purchasedPrice, takenFrom, takenDate, sellerNumber, sellerLocation, sellingPrice, givenTo, givenDate,
                 buyerNumber, buyerLocation, withPartnership, mutation).enqueue(new Callback<Data>() {
             @Override

@@ -3,7 +3,6 @@ package com.koders.budgie.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -15,11 +14,12 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.koders.budgie.R;
+import com.koders.budgie.model.User;
 import com.koders.budgie.networkcalls.ApiCall;
 import com.koders.budgie.networkcalls.RetrofitClient;
 import com.koders.budgie.model.Data;
 import com.koders.budgie.utils.LoadingDialog;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 import com.koders.budgie.utils.Utility;
 
 import retrofit2.Call;
@@ -104,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
 
+                        User user = response.body().getUser();
+
                         if (response.body().isStatus()) {
                             loadingDialog.dismiss();
 
@@ -111,8 +113,16 @@ public class LoginActivity extends AppCompatActivity {
                             String token = response.body().getToken();
                             Log.d("Response", message);
 
-                            SharePreferencesHandler.setIsLogin(true);
-                            SharePreferencesHandler.setToken(token);
+                            SharedPreferencesHandler.setIsLogin(true);
+                            SharedPreferencesHandler.setToken(token);
+
+                            SharedPreferencesHandler.setEmail(user.getEmail());
+                            SharedPreferencesHandler.setUsername(user.getUsername());
+                            SharedPreferencesHandler.setFirstName(user.getFirstName());
+                            SharedPreferencesHandler.setLastName(user.getLastName());
+                            SharedPreferencesHandler.setCountry(user.getCountry());
+                            SharedPreferencesHandler.setImage(user.getImage());
+                            SharedPreferencesHandler.setTagLine(user.getTagLine());
 
                             Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -123,6 +133,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
+                } else {
+                    loadingDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 

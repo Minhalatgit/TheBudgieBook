@@ -1,15 +1,20 @@
 package com.koders.budgie.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Data {
 
     private boolean status;
     private String message;
     private String token;
+    @SerializedName("data")
+    private User user;
 
-    public Data(boolean status, String message, String token) {
+    public Data(boolean status, String message, String token, User user) {
         this.status = status;
         this.message = message;
         this.token = token;
+        this.user = user;
     }
 
     public String getToken() {
@@ -22,5 +27,9 @@ public class Data {
 
     public String getMessage() {
         return message;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

@@ -10,7 +10,7 @@
         tools:context=".activities.LoginActivity">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/registerImage"
+            android:id="@+id/profileImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
@@ -21,7 +21,7 @@
             android:id="@+id/registerCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/registerImage"
+            android:layout_below="@+id/profileImage"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"

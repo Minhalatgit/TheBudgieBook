@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.koders.budgie.R;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,14 +19,14 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (SharePreferencesHandler.getIsLogin()) {
+                if (SharedPreferencesHandler.getIsLogin()) {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
                 finish();
             }
-        }, 1500);
+        }, 500);
 
     }
 }

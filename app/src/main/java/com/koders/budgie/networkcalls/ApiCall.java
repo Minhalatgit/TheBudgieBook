@@ -4,6 +4,7 @@ import com.koders.budgie.model.BirdInfo;
 import com.koders.budgie.model.BirdModel;
 import com.koders.budgie.model.BirdResponse;
 import com.koders.budgie.model.Data;
+import com.koders.budgie.model.Profile;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -113,4 +114,15 @@ public interface ApiCall {
                                    @Part("Buyer_Location") RequestBody buyerLocation,
                                    @Part("With_partnership") RequestBody withPartnership,
                                    @Part("Mutation") RequestBody mutation);
+
+    @Multipart
+    @PUT("/auth/user-info/")
+    Call<Profile> updateProfile(@Header("Authorization") String authorization,
+                                @Part("username") RequestBody username,
+                                @Part("email") RequestBody email,
+                                @Part("first_name") RequestBody firstName,
+                                @Part("last_name") RequestBody lastName,
+                                @Part MultipartBody.Part image,
+                                @Part("country") RequestBody country,
+                                @Part("tag_line") RequestBody tagLine);
 }

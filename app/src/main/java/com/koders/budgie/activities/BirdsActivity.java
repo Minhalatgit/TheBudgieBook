@@ -3,7 +3,6 @@ package com.koders.budgie.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +26,7 @@ import com.koders.budgie.model.BirdInfo;
 import com.koders.budgie.model.BirdResponse;
 import com.koders.budgie.pagination.PaginationScrollListener;
 import com.koders.budgie.utils.LoadingDialog;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 import com.koders.budgie.utils.Utility;
 
 import java.util.ArrayList;
@@ -168,7 +167,7 @@ public class BirdsActivity extends AppCompatActivity {
 
     private void getAllBirdsInfo() {
         loadingDialog.showLoading();
-        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
+        apiCall.getAllBirds("Token " + SharedPreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
             @Override
             public void onResponse(Call<BirdResponse> call, Response<BirdResponse> response) {
                 if (response.isSuccessful()) {
@@ -205,7 +204,7 @@ public class BirdsActivity extends AppCompatActivity {
 
     private void getBirdsInfoPaginated() {
         isLoading = true;
-        apiCall.getAllBirds("Token " + SharePreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
+        apiCall.getAllBirds("Token " + SharedPreferencesHandler.getToken(), start, end).enqueue(new Callback<BirdResponse>() {
             @Override
             public void onResponse(Call<BirdResponse> call, Response<BirdResponse> response) {
                 if (response.isSuccessful()) {

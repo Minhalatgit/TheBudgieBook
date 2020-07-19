@@ -17,24 +17,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.koders.budgie.R;
 import com.koders.budgie.adapters.NavigationAdapter;
+import com.koders.budgie.config.Constants;
+import com.koders.budgie.model.Profile;
 import com.koders.budgie.networkcalls.ApiCall;
 import com.koders.budgie.networkcalls.RetrofitClient;
 import com.koders.budgie.model.Data;
 import com.koders.budgie.model.Navigation;
 import com.koders.budgie.utils.LoadingDialog;
-import com.koders.budgie.utils.SharePreferencesHandler;
+import com.koders.budgie.utils.SharedPreferencesHandler;
 import com.koders.budgie.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,15 +46,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private View headerView;
     //    private ImageView hamburger;
     private RecyclerView homeNavigationRecyclerView;
+    private CircleImageView profileDisplay;
+
     ApiCall apiCall;
     LoadingDialog loadingDialog;
     List<Navigation> navigationList;
     RecyclerView.LayoutManager layoutManager;
     NavigationAdapter adapter;
     Toolbar toolbar;
-    TextView toolbarText;
+    TextView toolbarText, userFullName, userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +76,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Glide.with(HomeActivity.this)
+                .load(Constants.BASE_URL + SharedPreferencesHandler.getImage())
+                .placeholder(R.drawable.profile_image)
+                .into(profileDisplay);
+        userFullName.setText(SharedPreferencesHandler.getFirstName() + " " + SharedPreferencesHandler.getLastName());
+        userEmail.setText(SharedPreferencesHandler.getEmail());
+    }
+
     private void init() {
         drawerLayout = findViewById(R.id.drawer);
         //hamburger = findViewById(R.id.hamburger);
         navigationView = findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+        profileDisplay = headerView.findViewById(R.id.profileDisplay);
+        userFullName = headerView.findViewById(R.id.profileName);
+        userEmail = headerView.findViewById(R.id.profileEmail);
         homeNavigationRecyclerView = findViewById(R.id.homeNavigationRecyclerView);
         toolbar = findViewById(R.id.toolbar);
         toolbarText = toolbar.findViewById(R.id.toolbarText);
@@ -98,8 +119,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         homeNavigationRecyclerView.setLayoutManager(layoutManager);
         homeNavigationRecyclerView.setAdapter(adapter);
 
-
         apiCall = RetrofitClient.getRetrofit().create(ApiCall.class);
+
+        Glide.with(HomeActivity.this)
+                .load(Constants.BASE_URL + SharedPreferencesHandler.getImage())
+                .placeholder(R.drawable.profile_image)
+                .into(profileDisplay);
+        userFullName.setText(SharedPreferencesHandler.getFirstName() + " " + SharedPreferencesHandler.getLastName());
+        userEmail.setText(SharedPreferencesHandler.getEmail());
     }
 
     private void populateHomeNavigation() {
@@ -125,7 +152,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void logoutUser() {
         loadingDialog.showLoading();
-        apiCall.logoutUser("Token " + SharePreferencesHandler.getToken()).enqueue(new Callback<Data>() {
+        apiCall.logoutUser("Token " + SharedPreferencesHandler.getToken()).enqueue(new Callback<Data>() {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
                 if (response.isSuccessful()) {
@@ -135,8 +162,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             loadingDialog.dismiss();
                             String message = response.body().getMessage();
 
-                            SharePreferencesHandler.setIsLogin(false);
-                            SharePreferencesHandler.setToken("");
+                            SharedPreferencesHandler.setIsLogin(false);
+                            SharedPreferencesHandler.setToken("");
+                            SharedPreferencesHandler.setEmail("");
+                            SharedPreferencesHandler.setUsername("");
+                            SharedPreferencesHandler.setFirstName("");
+                            SharedPreferencesHandler.setLastName("");
+                            SharedPreferencesHandler.setCountry("");
+                            SharedPreferencesHandler.setTagLine("");
+                            SharedPreferencesHandler.setImage("");
+
                             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                             finish();
                             Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -166,7 +201,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_profile:
-                //open my profile screen
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
             case R.id.nav_about:
                 startActivity(new Intent(HomeActivity.this, AboutUsActivity.class));
