@@ -7,6 +7,7 @@ public class Data {
     private boolean status;
     private String message;
     private String token;
+    private boolean mail_sent;
     @SerializedName("data")
     private User user;
 
@@ -31,5 +32,9 @@ public class Data {
 
     public User getUser() {
         return user;
+    }
+
+    public boolean isMail_sent() {
+        return mail_sent;
     }
 }

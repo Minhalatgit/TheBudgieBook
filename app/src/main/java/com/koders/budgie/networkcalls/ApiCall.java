@@ -1,6 +1,5 @@
 package com.koders.budgie.networkcalls;
 
-import com.koders.budgie.model.BirdInfo;
 import com.koders.budgie.model.BirdModel;
 import com.koders.budgie.model.BirdResponse;
 import com.koders.budgie.model.Data;
@@ -34,6 +33,13 @@ public interface ApiCall {
                             @Part MultipartBody.Part image,
                             @Part("country") RequestBody country,
                             @Part("tag_line") RequestBody tagLine);
+
+    @FormUrlEncoded
+    @POST("/auth/verify/")
+    Call<Data> verifyCode(@Header("Authorization") String authorization, @Field("code") String code);
+
+    @GET("/auth/Send-code-again/")
+    Call<Data> resendCode(@Header("Authorization") String authorization);
 
     @FormUrlEncoded
     @POST("/auth/login/")
@@ -72,9 +78,6 @@ public interface ApiCall {
                            @Part("With_partnership") RequestBody withPartnership,
                            @Part("Mutation") RequestBody mutation);
 
-
-    //  @GET("/birds/pagination/")
-//  Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization, @Query("page") int page);
     @GET("/birds/pagination/{start}/{end}")
     Call<BirdResponse> getAllBirds(@Header("Authorization") String authorization, @Path("start") int start, @Path("end") int end);
 

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.koders.budgie.R;
+import com.koders.budgie.model.User;
 import com.koders.budgie.networkcalls.ApiCall;
 import com.koders.budgie.networkcalls.RetrofitClient;
 import com.koders.budgie.model.Data;
@@ -160,19 +161,31 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
 
+                        User user = response.body().getUser();
+
                         if (response.body().isStatus()) {
                             loadingDialog.dismiss();
 
                             String message = response.body().getMessage();
                             String token = response.body().getToken();
+                            boolean isMailSent = response.body().isMail_sent();
+
+//                            SharedPreferencesHandler.setEmail(user.getEmail());
+//                            SharedPreferencesHandler.setUsername(user.getUsername());
+//                            SharedPreferencesHandler.setFirstName(user.getFirstName());
+//                            SharedPreferencesHandler.setLastName(user.getLastName());
+//                            SharedPreferencesHandler.setCountry(user.getCountry());
+//                            SharedPreferencesHandler.setImage(user.getImage());
+//                            SharedPreferencesHandler.setTagLine(user.getTagLine());
 
                             Log.d("Response", "Message: " + message + "Token: " + token);
                             Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                            SharedPreferencesHandler.setIsLogin(true);
+//                            SharedPreferencesHandler.setIsLogin(true);
                             SharedPreferencesHandler.setToken(token);
-                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                            finishAffinity();
+//                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                            startActivity(new Intent(RegisterActivity.this, VerifyCodeActivity.class));
+                            //finishAffinity();
 
                         } else {
                             loadingDialog.dismiss();

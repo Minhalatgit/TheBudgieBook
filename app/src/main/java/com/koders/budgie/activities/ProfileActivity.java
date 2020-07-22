@@ -71,7 +71,6 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 20;
     String picturePath;
     User userData;
-    String capitalizedCountry = "";
     MultipartBody.Part image;
     LoadingDialog loadingDialog;
 
@@ -137,6 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateProfile() {
         Utility.hideKeyboard(ProfileActivity.this);
+        String capitalizedCountry = "";
 
         String username = usernameText.getText().toString().trim();
         String email = emailText.getText().toString().trim().toLowerCase();
@@ -282,6 +282,13 @@ public class ProfileActivity extends AppCompatActivity {
         tagLineText.setBackground(null);
 
         userNameLayout.setCounterEnabled(false);
+
+        userNameLayout.setError(null);
+        emailInputLayout.setError(null);
+        firstNameInputLayout.setError(null);
+        lastNameInputLayout.setError(null);
+        countryInputLayout.setError(null);
+
     }
 
     private void showChooser() {
