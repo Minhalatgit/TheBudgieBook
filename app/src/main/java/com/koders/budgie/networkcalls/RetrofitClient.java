@@ -13,11 +13,11 @@ public class RetrofitClient {
 
     public static Retrofit getRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(10, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build();
 
-        if (retrofit==null) {
+        if (retrofit == null) {
             retrofit = new Retrofit.Builder().baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)

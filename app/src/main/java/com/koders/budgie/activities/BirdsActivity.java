@@ -126,12 +126,12 @@ public class BirdsActivity extends AppCompatActivity {
         birdsRecyclerView = findViewById(R.id.birdsRecyclerView);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         toolbar = findViewById(R.id.toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbarText);
         loadingDialog = new LoadingDialog(BirdsActivity.this);
         apiCall = RetrofitClient.getRetrofit().create(ApiCall.class);
         layoutManager = new LinearLayoutManager(this);
         birdsRecyclerView.setLayoutManager(layoutManager);
         noBirds = findViewById(R.id.noBirds);
-        toolbarText = toolbar.findViewById(R.id.toolbarText);
 
         birdListAdapter = new BirdListAdapter(BirdsActivity.this, birdInfoList, listener);
         birdsRecyclerView.setAdapter(birdListAdapter);
@@ -145,8 +145,8 @@ public class BirdsActivity extends AppCompatActivity {
         birdsRecyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
             @Override
             protected void loadMoreItems() {
-                start = end + 1;
-                end = start + 9;
+                start = end;
+                end = start + 10;
 
                 birdListAdapter.addLoadingFooter();
 

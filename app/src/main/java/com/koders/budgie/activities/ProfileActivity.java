@@ -91,6 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showChooser();
+//                startActivity(new Intent(ProfileActivity.this, ProfilePictureActivity.class));
             }
         });
 

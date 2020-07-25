@@ -14,14 +14,15 @@
         android:src="@drawable/bird" />
 
     <TextView
-        android:layout_marginTop="5dp"
-        android:text="The Budgie Book"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/splashText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/splashImage" />
+        android:layout_below="@+id/splashImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

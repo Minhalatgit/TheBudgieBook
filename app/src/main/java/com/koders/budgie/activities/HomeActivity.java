@@ -72,6 +72,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //            }
 //        });
 
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, ProfilePictureActivity.class));
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
     }
@@ -134,10 +142,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationList.add(new Navigation("My Cards", R.drawable.bird));
         navigationList.add(new Navigation("My Aviary", R.drawable.bird));
         navigationList.add(new Navigation("Bird Of The Month", R.drawable.bird));
-        navigationList.add(new Navigation("Genetics", R.drawable.bird));
-        navigationList.add(new Navigation("For Sale", R.drawable.bird));
-        navigationList.add(new Navigation("Genetics", R.drawable.bird));
-        navigationList.add(new Navigation("For Sale", R.drawable.bird));
         navigationList.add(new Navigation("Genetics", R.drawable.bird));
     }
 

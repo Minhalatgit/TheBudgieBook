@@ -18,6 +18,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +32,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -86,11 +89,12 @@ public class AddBirdActivity extends AppCompatActivity {
             takenDateText, sellerNumberText, sellerLocationText, sellingPriceText, givenToText, givenDateText, buyerNumberText,
             buyerLocationText, withPartnershipText, mutationText;
 
-    private TextView title;
     private ImageView mutationBtn;
     private Button submitBtn;
     private CircleImageView bird_profile_image;
     private ScrollView scrollView;
+    private Toolbar toolbar;
+    private TextView toolbarText;
 
     //adapters
     ArrayAdapter<CharSequence> sexAdapter, sizeAdapter, crestedAdapter;
@@ -116,7 +120,7 @@ public class AddBirdActivity extends AppCompatActivity {
     //progress dialog
     LoadingDialog loadingDialog;
 
-    String from = "", ringNum = "";
+    String from = "", ringNumForQuery = "";
     String picturePath;
     MultipartBody.Part image;
     boolean isRingNumValid, isRingOwnerNameValid;
@@ -127,7 +131,7 @@ public class AddBirdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bird);
 
-        loadingDialog = new LoadingDialog(AddBirdActivity.this);
+
         init();
 
         if (getIntent().hasExtra("from")) {
@@ -135,14 +139,17 @@ public class AddBirdActivity extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra("ringNum")) {
-            ringNum = getIntent().getStringExtra("ringNum");
+            ringNumForQuery = getIntent().getStringExtra("ringNum");
         }
 
         if (from.equals("edit")) {
-            title.setText("Edit Bird");
-            getBird(ringNum);
+            toolbarText.setText(R.string.edit_bird);
+            getBird(ringNumForQuery);
             ringNumberText.setEnabled(false);
+        } else {
+            toolbarText.setText(getResources().getString(R.string.add_new_bird));
         }
+
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -532,20 +539,27 @@ public class AddBirdActivity extends AppCompatActivity {
         withPartnershipText = findViewById(R.id.withPartnershipText);
         mutationText = findViewById(R.id.mutationText);
 
+        toolbar = findViewById(R.id.toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbarText);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //init image view views
         mutationBtn = findViewById(R.id.mutationListBtn);
         bird_profile_image = (CircleImageView) findViewById(R.id.bird_profile_image);
 
         //init button views
         submitBtn = findViewById(R.id.submitBtn);
-
         scrollView = findViewById(R.id.scrollView);
-
-        title = findViewById(R.id.title);
 
         apiCall = RetrofitClient.getRetrofit().create(ApiCall.class);
 
         fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        loadingDialog = new LoadingDialog(AddBirdActivity.this);
 
     }
 
@@ -572,77 +586,6 @@ public class AddBirdActivity extends AppCompatActivity {
             ringOwnerNameInputLayout.setError(null);
             return true;
         }
-    }
-
-    private void updateBirdInfo(String ring_no, MultipartBody.Part image, RequestBody ringNum, RequestBody sex,
-                                RequestBody hatchDate, RequestBody arrivalDate, RequestBody approxAge, RequestBody size,
-                                RequestBody color, RequestBody crested, RequestBody father, RequestBody mother,
-                                RequestBody status, RequestBody cageNumber, RequestBody ringOwnerName, RequestBody purchasedPrice,
-                                RequestBody takenFrom, RequestBody takenDate, RequestBody sellerNumber, RequestBody sellerLocation,
-                                RequestBody sellingPrice, RequestBody givenTo, RequestBody givenDate, RequestBody buyerNumber,
-                                RequestBody buyerLocation, RequestBody withPartnership, RequestBody mutation) {
-        loadingDialog.showLoading();
-        //update api call
-        apiCall.updateBirdInfo("Token " + SharedPreferencesHandler.getToken(), ring_no, image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
-                ringOwnerName, purchasedPrice, takenFrom, takenDate, sellerNumber, sellerLocation, sellingPrice, givenTo, givenDate,
-                buyerNumber, buyerLocation, withPartnership, mutation).enqueue(new Callback<BirdModel>() {
-            @Override
-            public void onResponse(Call<BirdModel> call, Response<BirdModel> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-
-                        if (response.body().isStatus()) {
-                            loadingDialog.dismiss();
-                            scrollView.fullScroll(View.FOCUS_UP);
-                            ringNumberText.setText("");
-                            sexSpinner.setSelection(0);
-                            hatchDateText.setText("");
-                            arrivalDateText.setText("");
-                            approxAgeText.setText("");
-                            sizeSpinner.setSelection(0);
-                            colorText.setText("");
-                            crestedSpinner.setSelection(0);
-                            motherText.setText("");
-                            fatherText.setText("");
-                            statusText.setText("");
-                            cageNumberText.setText("");
-                            ringOwnerNameText.setText("");
-                            purchasedPriceText.setText("");
-                            takenFromText.setText("");
-                            takenDateText.setText("");
-                            sellerNumberText.setText("");
-                            sellerLocationText.setText("");
-                            sellingPriceText.setText("");
-                            givenToText.setText("");
-                            givenDateText.setText("");
-                            buyerNumberText.setText("");
-                            buyerLocationText.setText("");
-                            withPartnershipText.setText("");
-                            mutationText.setText("");
-                            bird_profile_image.setImageDrawable(getDrawable(R.drawable.bird));
-                            finish();
-                            Log.d("Response", "Updated successfully");
-                            Toast.makeText(AddBirdActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            loadingDialog.dismiss();
-                            Log.d("Response", "Update failed");
-                            Toast.makeText(AddBirdActivity.this, "Updated failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    loadingDialog.dismiss();
-                    Log.d("Response", response.message());
-                    Toast.makeText(AddBirdActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BirdModel> call, Throwable t) {
-                loadingDialog.dismiss();
-                Log.d("Response", t.getMessage());
-                Toast.makeText(AddBirdActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void showChooser() {
@@ -925,5 +868,88 @@ public class AddBirdActivity extends AppCompatActivity {
         });
     }
 
+
+    private void updateBirdInfo(String ring_no, MultipartBody.Part image, RequestBody ringNum, RequestBody sex,
+                                RequestBody hatchDate, RequestBody arrivalDate, RequestBody approxAge, RequestBody size,
+                                RequestBody color, RequestBody crested, RequestBody father, RequestBody mother,
+                                RequestBody status, RequestBody cageNumber, RequestBody ringOwnerName, RequestBody purchasedPrice,
+                                RequestBody takenFrom, RequestBody takenDate, RequestBody sellerNumber, RequestBody sellerLocation,
+                                RequestBody sellingPrice, RequestBody givenTo, RequestBody givenDate, RequestBody buyerNumber,
+                                RequestBody buyerLocation, RequestBody withPartnership, RequestBody mutation) {
+        loadingDialog.showLoading();
+        //update api call
+        apiCall.updateBirdInfo("Token " + SharedPreferencesHandler.getToken(), ring_no, image, ringNum, sex, hatchDate, arrivalDate, approxAge, size, color, crested, father, mother, status, cageNumber,
+                ringOwnerName, purchasedPrice, takenFrom, takenDate, sellerNumber, sellerLocation, sellingPrice, givenTo, givenDate,
+                buyerNumber, buyerLocation, withPartnership, mutation).enqueue(new Callback<BirdModel>() {
+            @Override
+            public void onResponse(Call<BirdModel> call, Response<BirdModel> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+
+                        if (response.body().isStatus()) {
+                            loadingDialog.dismiss();
+                            scrollView.fullScroll(View.FOCUS_UP);
+                            ringNumberText.setText("");
+                            sexSpinner.setSelection(0);
+                            hatchDateText.setText("");
+                            arrivalDateText.setText("");
+                            approxAgeText.setText("");
+                            sizeSpinner.setSelection(0);
+                            colorText.setText("");
+                            crestedSpinner.setSelection(0);
+                            motherText.setText("");
+                            fatherText.setText("");
+                            statusText.setText("");
+                            cageNumberText.setText("");
+                            ringOwnerNameText.setText("");
+                            purchasedPriceText.setText("");
+                            takenFromText.setText("");
+                            takenDateText.setText("");
+                            sellerNumberText.setText("");
+                            sellerLocationText.setText("");
+                            sellingPriceText.setText("");
+                            givenToText.setText("");
+                            givenDateText.setText("");
+                            buyerNumberText.setText("");
+                            buyerLocationText.setText("");
+                            withPartnershipText.setText("");
+                            mutationText.setText("");
+                            bird_profile_image.setImageDrawable(getDrawable(R.drawable.bird));
+//                            ringNumForQuery = response.body().getBirdInfo().getRingNumber();
+                            finish();
+                            Log.d("Response", "Updated successfully");
+                            Toast.makeText(AddBirdActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            loadingDialog.dismiss();
+                            Log.d("Response", "Update failed");
+                            Toast.makeText(AddBirdActivity.this, "Updated failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    loadingDialog.dismiss();
+                    Log.d("Response", response.message());
+                    Toast.makeText(AddBirdActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BirdModel> call, Throwable t) {
+                loadingDialog.dismiss();
+                Log.d("Response", t.getMessage());
+                Toast.makeText(AddBirdActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed(); //OR finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

@@ -1,12 +1,17 @@
 package com.koders.budgie.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +42,7 @@ import static android.graphics.Color.BLACK;
 
 public class BirdDetailActivity extends AppCompatActivity {
 
-    private ImageView deleteBird, editBird, mainPlus, fatherPlus, motherPlus, grandFatherLeftPlus, grandMotherLeftPlus, grandFatherRightPlus, grandMotherRightPlus;
+    private ImageView mainPlus, fatherPlus, motherPlus, grandFatherLeftPlus, grandMotherLeftPlus, grandFatherRightPlus, grandMotherRightPlus;
     private CircleImageView topImage, fatherImage, grandFatherImageLeft, grandMotherImageLeft, motherImage, grandFatherImageRight,
             grandMotherImageRight;
     private TextView topMutation, topRingNum, topAge, topGender, fatherRingNum, fatherMutation, grandFatherRingNumLeft, grandFatherMutationLeft,
@@ -55,6 +60,9 @@ public class BirdDetailActivity extends AppCompatActivity {
     private BirdInfoDialog birdInfoDialog;
     private BirdInfo mainBirdInfo, fatherBirdInfo, grandFatherLeftBirdInfo, grandMotherLeftBirdInfo, motherBirdInfo, grandFatherRightBirdInfo, grandMotherRightBirdInfo;
 
+    private Toolbar toolbar;
+    private TextView toolbarText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,20 +79,6 @@ public class BirdDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No internet", Toast.LENGTH_SHORT).show();
         }
-
-        deleteBird.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteBird(ringNumMain);
-            }
-        });
-
-        editBird.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editBird(ringNumMain);
-            }
-        });
 
         fatherMainCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,8 +175,6 @@ public class BirdDetailActivity extends AppCompatActivity {
     }
 
     private void init() {
-        deleteBird = findViewById(R.id.delete_bird);
-        editBird = findViewById(R.id.edit_bird);
 
         topImage = findViewById(R.id.topImage);
         fatherImage = findViewById(R.id.fatherImage);
@@ -233,6 +225,15 @@ public class BirdDetailActivity extends AppCompatActivity {
         grandMotherLeftPlus = findViewById(R.id.grandMotherLeftPlus);
         grandFatherRightPlus = findViewById(R.id.grandFatherRightPlus);
         grandMotherRightPlus = findViewById(R.id.grandMotherRightPlus);
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbarText = toolbar.findViewById(R.id.toolbarText);
+
+        toolbarText.setText(getResources().getString(R.string.bird_details));
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         apiCall = RetrofitClient.getRetrofit().create(ApiCall.class);
         loadingDialog = new LoadingDialog(BirdDetailActivity.this);
@@ -614,5 +615,29 @@ public class BirdDetailActivity extends AppCompatActivity {
         intent.putExtra("from", "edit");
         intent.putExtra("ringNum", ringNum);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_bird_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.edit:
+                editBird(ringNumMain);
+                break;
+            case R.id.delete:
+                deleteBird(ringNumMain);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
