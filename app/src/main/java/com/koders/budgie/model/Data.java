@@ -8,6 +8,9 @@ public class Data {
     private String message;
     private String token;
     private boolean mail_sent;
+
+    @SerializedName("is_verified")
+    private boolean isVerified;
     @SerializedName("data")
     private User user;
 
@@ -36,5 +39,9 @@ public class Data {
 
     public boolean isMail_sent() {
         return mail_sent;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 }

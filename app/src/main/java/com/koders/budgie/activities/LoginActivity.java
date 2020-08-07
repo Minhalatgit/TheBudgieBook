@@ -68,14 +68,14 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailText.getText().toString().trim().toLowerCase();
                 String password = passwordText.getText().toString().trim();
 
-                if (!isEmailValid(email) | !isPasswordValid(password)) {
-                    Log.d(TAG, "onClick: email or password is empty");
-                } else {
+                if (isEmailValid(email) & isPasswordValid(password)) {
                     if (Utility.isNetworkConnected()) {
                         loginUser(email, password);
                     } else {
                         Toast.makeText(LoginActivity.this, "No internet", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Log.d(TAG, "onClick: email or password is empty");
                 }
             }
         });
@@ -129,8 +129,16 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
 
                         } else {
-                            loadingDialog.dismiss();
-                            Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            if (!response.body().isVerified()) {
+                                loadingDialog.dismiss();
+                                Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, VerifyCodeActivity.class);
+                                intent.putExtra("from", "login");
+                                startActivity(intent);
+                            } else {
+                                loadingDialog.dismiss();
+                                Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 } else {

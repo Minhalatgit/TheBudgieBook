@@ -16,12 +16,28 @@
         android:layout_marginTop="10dp"
         android:src="@drawable/white_cancel" />
 
-    <ImageView
+    <com.jsibbold.zoomage.ZoomageView
         android:id="@+id/profileImage"
-        android:layout_below="@id/cancel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/cancel"
         android:padding="20dp"
-        android:src="@drawable/profile_image" />
+        android:src="@drawable/profile_image"
+        app:zoomage_animateOnReset="true"
+        app:zoomage_autoCenter="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_maxScale="8"
+        app:zoomage_minScale="0.6"
+        app:zoomage_restrictBounds="false"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/profileImage"-->
+    <!--        android:layout_below="@id/cancel"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:padding="20dp"-->
+    <!--        android:src="@drawable/profile_image" />-->
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.koders.budgie.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -33,4 +34,5 @@ public class Utility {
         ConnectivityManager cm = (ConnectivityManager) BudgieApplication.getCtx().getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
+
 }

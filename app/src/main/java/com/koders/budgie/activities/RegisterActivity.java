@@ -89,10 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
                     capitalizedCountry = firstLetter + country.substring(1);
                 }
 
-                if (!isUsernameValid(username) | !isEmailValid(email) | !isPasswordValid(password, password2) |
-                        !isFirstNameValid(firstName) | !isLastNameValid(lastName) | !isValidCountry(capitalizedCountry)) {
-                    Log.d(TAG, "onClick: any field is empty");
-                } else {
+                if (isUsernameValid(username) & isEmailValid(email) & isPasswordValid(password, password2) &
+                        isFirstNameValid(firstName) & isLastNameValid(lastName) & isValidCountry(capitalizedCountry)) {
 
                     if (picturePath != null) {
                         File file = new File(picturePath);
@@ -114,6 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(RegisterActivity.this, "No internet", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Log.d(TAG, "onClick: any field is empty");
                 }
             }
         });
@@ -364,30 +364,47 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password, String password2) {
-        boolean valid = true;
-        String errorMessage = "";
+        boolean valid, isEmpty = true;
 
         if (password.isEmpty()) {
-            errorMessage = "Password must not be empty";
-            valid = false;
-        } else if (password2.isEmpty()) {
-            errorMessage = "Password must not be empty";
-            valid = false;
-        } else if (!password.equals(password2)) {
-            errorMessage = "Password must be same";
-            valid = false;
-        } else if (password.length() < 6) {
-            errorMessage = "Password must contain at least 6 characters";
-            valid = false;
-        } else if (password2.length() < 6) {
-            errorMessage = "Password must contain at least 6 characters";
+            passwordInputLayout.setError("Password must not be empty");
             valid = false;
         } else {
-            errorMessage = null;
-            valid = true;
+            if (password.length() < 6) {
+                passwordInputLayout.setError("Password must contain at least 6 characters");
+                valid = false;
+            } else {
+                passwordInputLayout.setError(null);
+                valid = true;
+                isEmpty = false;
+            }
         }
-        passwordInputLayout.setError(errorMessage);
-        password2InputLayout.setError(errorMessage);
+        if (password2.isEmpty()) {
+            password2InputLayout.setError("Password must not be empty");
+            valid = false;
+        } else {
+            if (password2.length() < 6) {
+                password2InputLayout.setError("Password must contain at least 6 characters");
+                valid = false;
+            } else {
+                password2InputLayout.setError(null);
+                valid = true;
+                isEmpty = false;
+            }
+        }
+
+        if (!isEmpty) {
+            if (!password.equals(password2)) {
+                passwordInputLayout.setError("Password must be same");
+                password2InputLayout.setError("Password must be same");
+                valid = false;
+            } else {
+                passwordInputLayout.setError(null);
+                password2InputLayout.setError(null);
+                valid = true;
+            }
+        }
+
         return valid;
     }
 

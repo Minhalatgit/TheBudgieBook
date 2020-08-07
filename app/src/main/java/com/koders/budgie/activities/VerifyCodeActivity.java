@@ -43,20 +43,30 @@ public class VerifyCodeActivity extends AppCompatActivity {
     private EditText verifyCode;
     private Button verifyBtn;
     private LoadingDialog loadingDialog;
+    private String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_code);
 
+        if (getIntent().hasExtra("from")) {
+            from = getIntent().getStringExtra("from");
+        }
+
         init();
+
+        if (from != null) {
+            if (from.equals("login")) {
+                resendCode();
+            }
+        }
 
         startTimer();
 
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verifyCode.setText("");
                 resendCode();
             }
         });
@@ -187,6 +197,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
 
     private void resendCode() {
         if (Utility.isNetworkConnected()) {
+            verifyCode.setText("");
             loadingDialog.showLoading();
             startTimer();
             apiCall.resendCode("Token " + SharedPreferencesHandler.getToken()).enqueue(new Callback<Data>() {

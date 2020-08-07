@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.jsibbold.zoomage.ZoomageView;
 import com.koders.budgie.R;
 import com.koders.budgie.config.Constants;
 import com.koders.budgie.utils.SharedPreferencesHandler;
